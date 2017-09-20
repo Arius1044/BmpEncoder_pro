@@ -2,41 +2,95 @@
 #include "RGB.h"
 #include <iostream>
 #include <fstream>
+#include "Header.h"
 
 using namespace std;
 
+ int BMP::Tcode(int byte) 
+{
+	
+	int copy_mask = File_INFO.S_Mask;
+	int	mask_shift = 0;
+
+	while (!(copy_mask & 1)) {
+		copy_mask >>= 1;
+		mask_shift++;
+	}
+
+	return (byte & File_INFO.S_Mask) >> mask_shift;
+}
+
 BMP::BMP(char* _way_)
 {
-	ifstream file_image(_way_);
+	file_image.seekg(14);
+	file_image.read((char*)&File_INFO.Size, sizeof(File_INFO.Size));
+	file_image.read((char*)&File_INFO.Width, sizeof(File_INFO.Width));
+	file_image.read((char*)&File_INFO.Height, sizeof(File_INFO.Height));
 
-	file_image.seekg(18); file_image.read((char*)&width, sizeof(int));
-	file_image.seekg(22); file_image.read((char*)&heigh, sizeof(int));
-	file_image.seekg(28); file_image.read((char*)&bit_on_pix, sizeof(short));
-	count_of_pixels = width*heigh;
+	File_INFO.Count_of_Canals = 3;
+	File_INFO.Bits_on_Color = 8;
+	File_INFO.S_Mask = 255;
+
 	file_image.seekg(54);
-	
 
-	pixels = new RGB[count_of_pixels];
 
-	for (long long i = 0; i < count_of_pixels; i++)
+	pixels = new RGB *[File_INFO.Height];
+	for (int i = 0; i < File_INFO.Height; i++)
+		pixels[i] = new RGB[File_INFO.Width];
+
+
+	int linePadding = 2;
+
+	int code;
+
+
+	for (int i = 0; i < File_INFO.Height; i++)
 	{
-		file_image.read((char*)&pixels[i].c_R, sizeof(int));
-		file_image.read((char*)&pixels[i].c_G, sizeof(int));
-		file_image.read((char*)&pixels[i].c_B, sizeof(int));
+		for (int j = 0; j < File_INFO.Width; j++)
+		{
+			file_image.read((char*)&code, 1);
+			pixels[i][j].c_B = Tcode(code);
+			file_image.read((char*)&code, 1);
+			pixels[i][j].c_G = Tcode(code);
+			file_image.read((char*)&code, 1);
+			pixels[i][j].c_R = Tcode(code);
+
+		}
+		file_image.seekg(linePadding, ios::cur);
 	}
+	
 	file_image.close();
 }
 
 void BMP::get_info() const
 {
-	cout << width << "\n";
-	cout << heigh << "\n";
-	cout << count_of_pixels<<"\n";
-	cout << bit_on_pix << "\n";
-	cout << pixels[0].c_R << "  " << pixels[0].c_G << "  " << pixels[0].c_B;
+	cout << "________________________________________________________________________________" << endl;
+	cout << "                                |    INFO   |                                   " << endl;
+	cout << "________________________________|___________|___________________________________" << endl;
+
+	cout << "Size: " << File_INFO.Size << endl;
+	cout << "Height: " << File_INFO.Height << endl;
+	cout << "Width: " << File_INFO.Width << endl;
+	cout << "Canals on a pixel: " << File_INFO.Count_of_Canals << endl;
+	cout << "Bits on a color: " << File_INFO.Bits_on_Color<<endl;
+
+	cout << "________________________________|___________|___________________________________" << endl;
+
+	cout << "PIXELS: \n\n";
+	for (int i = 0; i <  File_INFO.Height; i++)
+	{
+			for (int j = 0; j < File_INFO.Width; j++)
+			{
+				cout << pixels[i][j].c_R << "  " << pixels[i][j].c_G << "  " << pixels[i][j].c_B << "  " << endl;
+			
+	        }
+			cout <<"_____________________"<< endl;
+	}
 }
 
 BMP::~BMP()
 {
-
+        for (int i=0; i<File_INFO.Height; i++)
+	    delete[] pixels[i];
+	delete[] pixels;
 }
