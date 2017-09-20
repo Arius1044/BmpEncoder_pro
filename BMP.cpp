@@ -12,7 +12,7 @@ BMP::BMP(char* _way_)
 	file_image.seekg(18); file_image.read((char*)&width, sizeof(int));
 	file_image.seekg(22); file_image.read((char*)&heigh, sizeof(int));
 	file_image.seekg(28); file_image.read((char*)&bit_on_pix, sizeof(short));
-	count_of_pixels = width*width;
+	count_of_pixels = width*heigh;
 	file_image.seekg(54);
 	
 
