@@ -2,7 +2,7 @@
 
 struct RGB
 {
-	long long c_R;
-	long long c_G;
-	long long c_B;
+	unsigned int c_R;
+	unsigned int c_G;
+	unsigned int c_B;
 };

@@ -1,14 +1,14 @@
 #pragma once
 #include <fstream>
 #include "RGB.h"
+#include "Header.h"
 class BMP
 {
 private:
-	long width;
-	long heigh;
-	short bit_on_pix;
-	long long count_of_pixels;
-	RGB *pixels;
+	BMPINFO File_INFO;
+	RGB **pixels;
+
+	 int Tcode(int byte);
 
 public:
 	BMP(char* _way_);
