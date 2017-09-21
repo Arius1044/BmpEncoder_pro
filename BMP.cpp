@@ -46,7 +46,7 @@ BMP::BMP(char* _way_)
 		pixels[i] = new RGB[File_INFO.Width];
 
 
-	int line_Padding = 2;
+	int line_Padding = ((fileInfoHeader.biWidth * (fileInfoHeader.biBitCount / 8)) % 4) & 3;
 
 	int code;
 
