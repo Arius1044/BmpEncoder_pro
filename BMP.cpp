@@ -4,12 +4,13 @@
 #include <fstream>
 #include "Header.h"
 
+
 using namespace std;
 
 
- int BMP::Tcode(int byte) 
+int BMP::Tcode(int byte)
 {
-	
+
 	int copy_mask = File_INFO.S_Mask;
 	int	mask_shift = 0;
 
@@ -25,6 +26,8 @@ using namespace std;
 
 BMP::BMP(char* _way_)
 {
+	ifstream file_image(_way_, ios_base::binary);
+
 	file_image.seekg(14);
 	file_image.read((char*)&File_INFO.Size, sizeof(File_INFO.Size));
 	file_image.read((char*)&File_INFO.Width, sizeof(File_INFO.Width));
@@ -36,6 +39,7 @@ BMP::BMP(char* _way_)
 
 	file_image.seekg(54);
 
+	Max_size_Massage = (3 * File_INFO.Width*File_INFO.Height)/8;
 
 	pixels = new RGB *[File_INFO.Height];
 	for (int i = 0; i < File_INFO.Height; i++)
@@ -61,10 +65,10 @@ BMP::BMP(char* _way_)
 		}
 		file_image.seekg(line_Padding, ios::cur);
 	}
-	
+
 	file_image.close();
 
-	
+
 }
 
 void BMP::get_info() const
@@ -77,28 +81,37 @@ void BMP::get_info() const
 	cout << "Height: " << File_INFO.Height << endl;
 	cout << "Width: " << File_INFO.Width << endl;
 	cout << "Canals on a pixel: " << File_INFO.Count_of_Canals << endl;
-	cout << "Bits on a color: " << File_INFO.Bits_on_Color<<endl;
+	cout << "Bits on a color: " << File_INFO.Bits_on_Color << endl;
+	cout << "Max size of text message: " << Max_size_Massage << endl;
 
 	cout << "________________________________|___________|___________________________________" << endl;
 
 	cout << "PIXELS: \n\n";
-	for (int i = 0; i <  File_INFO.Height; i++)
+	for (int i = 0; i < File_INFO.Height; i++)
 	{
-			for (int j = 0; j < File_INFO.Width; j++)
-			{
-				cout << pixels[i][j].c_R << "  " << pixels[i][j].c_G << "  " << pixels[i][j].c_B << "  " << endl;
-			
-	        }
-			cout <<"_____________________"<< endl;
+		for (int j = 0; j < File_INFO.Width; j++)
+		{
+			cout << pixels[i][j].c_R << "  " << pixels[i][j].c_G << "  " << pixels[i][j].c_B << "  " << endl;
+
+		}
+		cout << "_____________________" << endl;
 	}
 }
 
+
+void coding_massage(char* _massage_)
+{
+
+}
+
+
 BMP::~BMP()
 {
-	for (int i=0; i<File_INFO.Height; i++)
-	    delete[] pixels[i];
+	for (int i = 0; i<File_INFO.Height; i++)
+		delete[] pixels[i];
 	delete[] pixels;
 
 }
+
 
 
