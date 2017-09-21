@@ -3,15 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include "Header.h"
-<<<<<<< HEAD
+
+
 using namespace std;
 
 
-=======
-
-using namespace std;
-
->>>>>>> 7f84c35058ad61a68527de9a9813a7098c7bd3e2
  int BMP::Tcode(int byte) 
 {
 	
@@ -26,16 +22,10 @@ using namespace std;
 	return (byte & File_INFO.S_Mask) >> mask_shift;
 }
 
-<<<<<<< HEAD
+
 
 BMP::BMP(char* _way_)
 {
-	ifstream file_image(_way_, ios_base::binary);
-
-=======
-BMP::BMP(char* _way_)
-{
->>>>>>> 7f84c35058ad61a68527de9a9813a7098c7bd3e2
 	file_image.seekg(14);
 	file_image.read((char*)&File_INFO.Size, sizeof(File_INFO.Size));
 	file_image.read((char*)&File_INFO.Width, sizeof(File_INFO.Width));
@@ -53,7 +43,7 @@ BMP::BMP(char* _way_)
 		pixels[i] = new RGB[File_INFO.Width];
 
 
-	int linePadding = 2;
+	int line_Padding = 2;
 
 	int code;
 
@@ -70,7 +60,7 @@ BMP::BMP(char* _way_)
 			pixels[i][j].c_R = Tcode(code);
 
 		}
-		file_image.seekg(linePadding, ios::cur);
+		file_image.seekg(line_Padding, ios::cur);
 	}
 	
 	file_image.close();
@@ -80,10 +70,6 @@ BMP::BMP(char* _way_)
 
 void BMP::get_info() const
 {
-<<<<<<< HEAD
-
-=======
->>>>>>> 7f84c35058ad61a68527de9a9813a7098c7bd3e2
 	cout << "________________________________________________________________________________" << endl;
 	cout << "                                |    INFO   |                                   " << endl;
 	cout << "________________________________|___________|___________________________________" << endl;
@@ -110,15 +96,10 @@ void BMP::get_info() const
 
 BMP::~BMP()
 {
-<<<<<<< HEAD
 	for (int i=0; i<File_INFO.Height; i++)
 	    delete[] pixels[i];
 	delete[] pixels;
 
 }
-=======
-        for (int i=0; i<File_INFO.Height; i++)
-	    delete[] pixels[i];
-	delete[] pixels;
-}
->>>>>>> 7f84c35058ad61a68527de9a9813a7098c7bd3e2
+
+
