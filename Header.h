@@ -9,5 +9,6 @@ struct BMPINFO
 	unsigned short   Count_of_Canals;
 	unsigned short   Bits_on_Color;
 	unsigned int     S_Mask;
+	unsigned int     Line_Padding;
 };
 
