@@ -11,6 +11,8 @@ int main()
 {
 	BMP image("tiger.bmp");
 	image.get_info();
+	image.DeCoder();
+	image.PrintMassage();
 	system("pause");
 	return 0;
 }
