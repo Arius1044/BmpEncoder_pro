@@ -26,6 +26,7 @@ int BMP::Tcode(int byte)
 
 BMP::BMP(char* way)
 {
+
 	ifstream file_image(way, ios_base::binary);
 
 	file_image.seekg(14);
@@ -39,17 +40,21 @@ BMP::BMP(char* way)
 
 	file_image.seekg(54);
 
+
 	Max_size_Massage = (File_INFO.Width*File_INFO.Height) / 8;
 	size_Massage = Max_size_Massage;
 
 	Massage = new char[size_Massage];
+
 
 	pixels = new RGB *[File_INFO.Height];
 	for (int i = 0; i < File_INFO.Height; i++)
 		pixels[i] = new RGB[File_INFO.Width];
 
 
+
 	File_INFO.Line_Padding = ((File_INFO.Width * (File_INFO.Bits_on_Color / 8)) % 4) & 3;
+
 
 	int code;
 
@@ -83,15 +88,18 @@ void BMP::get_info() const
 	cout << "Size: " << File_INFO.Size << endl;
 	cout << "Height: " << File_INFO.Height << endl;
 	cout << "Width: " << File_INFO.Width << endl;
+
 	cout << "Canals on pixel: " << File_INFO.Count_of_Canals << endl;
 	cout << "Bits on color: " << File_INFO.Bits_on_Color << endl;
 	cout << "Max size of text message: " << Max_size_Massage << endl;
 	cout << "Count of pixels: " << File_INFO.Height*File_INFO.Width << endl;
 
+
 	cout << "_______________________________|___________|__________________________________" << endl;
 
 	cout << "PIXELS: \n\n";
 	for (int i = 0; i < File_INFO.Height; i++)
+
 	{
 		for (int j = 0; j < File_INFO.Width; j++)
 		{
@@ -146,6 +154,7 @@ void BMP::DeCoder()
 	delete[] Code_bits;
 
 }
+
 
 void BMP::PrintMassage() const
 {
@@ -210,6 +219,7 @@ void BMP::Coder(char* _Massage_, char* way)
 
 
 }
+
 
 
 BMP::~BMP()
