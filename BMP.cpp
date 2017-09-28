@@ -93,6 +93,54 @@ void BMP::get_info() const
 			cout <<"_____________________"<< endl;
 	}
 }
+void BMP::DeCoder()
+{
+
+	bool *Code_bits = new bool[8];
+	bool Canal_bit;
+	short counter = 0;
+	int number;
+	int ind = 0;
+
+	for (int i = 0; i < File_INFO.Height; i++)
+	{
+		for (int j = 0; j < File_INFO.Width; j++)
+		{
+
+			for (int k = 7; k >= 0; k--)
+				Canal_bit = (pixels[i][j].c_R >> k) & 1;
+			Code_bits[counter++] = Canal_bit;
+
+			if (counter == 7)
+			{
+				number = 0;
+				for (int k = 0; k < 8; ++k)
+				{
+					number += Code_bits[k] * pow(2, 8 - k);
+				}
+				Massage[ind] = char(number);
+				counter = 0;
+			}
+
+			if (Massage[ind] == '~')
+			{
+				size_Massage = ind + 1;
+				return;
+			}
+			ind++;
+		}
+
+	}
+
+	delete[] Code_bits;
+
+}
+
+void BMP::PrintMassage() const
+{
+	for (int i = 0; i < size_Massage; i++)
+		cout << Massage[i];
+}
 
 BMP::~BMP()
 {
