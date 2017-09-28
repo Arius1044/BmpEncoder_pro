@@ -5,6 +5,8 @@
 class BMP
 {
 private:
+	char* Massage;
+	unsigned int size_Massage;
 
 	char* Massage;
 	unsigned int Max_size_Massage;
@@ -17,9 +19,6 @@ public:
 	BMP(char* _way_);
 	~BMP();
 	void get_info() const;
+	void PrintMassage() const;
 	void DeCoder();
-	void Coder(char* _massage_);
-	void Shifrator();
-
-
 };
