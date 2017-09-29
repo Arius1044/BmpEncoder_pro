@@ -112,7 +112,7 @@ void BMP::get_info() const
 void BMP::DeCoder()
 {
 
-	bool *Code_bits = new bool[(File_INFO.Size*8)];
+	bool *Code_bits = new bool[(File_INFO.Size * 8)];
 
 	unsigned int i, j, count = 1;
 	int number = 0;
@@ -125,9 +125,9 @@ void BMP::DeCoder()
 		{
 
 			number += pixels[i][j].bit_R * pow(2, 7 - ind++);
-			if (count==8)
+			if (count == 8)
 			{
-				Massage[jnd] = char(number);				
+				Massage[jnd] = char(number);
 
 				if (Massage[jnd] == '~')
 				{
@@ -142,7 +142,7 @@ void BMP::DeCoder()
 
 			}
 
-			
+
 		}
 
 	}
@@ -171,7 +171,7 @@ void BMP::Coder(char* _Massage_, char* way)
 		int buff = int(Massage[i]);
 		for (int k = 7; k >= 0; k--, ind++)
 		{
-			
+
 			code_bits[ind] = (buff >> k) & 1;
 		}
 	}
@@ -179,9 +179,9 @@ void BMP::Coder(char* _Massage_, char* way)
 
 	ind = 0;
 
-	for (i = 0; i < (File_INFO.Height) && (ind<size_Massage*8); i++)
+	for (i = 0; i < (File_INFO.Height) && (ind<size_Massage * 8); i++)
 	{
-		for (j = 0; (j < File_INFO.Width) && (ind<size_Massage*8) ; j++)
+		for (j = 0; (File_INFO.Width) && (ind<size_Massage * 8); j++)
 		{
 			if (pixels[i][j].bit_R != code_bits[ind])
 			{
@@ -199,9 +199,9 @@ void BMP::Coder(char* _Massage_, char* way)
 	file_image.seekp(54);
 
 
-	for (i = 0; i < (File_INFO.Height) && (ind<size_Massage*8); i++)
+	for (i = 0; i < File_INFO.Height; i++)
 	{
-		for (j = 0; j < (j < File_INFO.Width) && (ind<size_Massage*8); j++)
+		for (j = 0; j < File_INFO.Width; j++)
 		{
 			file_image.write((char*)&pixels[i][j].c_B, 1);
 			file_image.write((char*)&pixels[i][j].c_G, 1);

@@ -39,7 +39,8 @@ int main()
 		break;
 		case 3:
 		{
-			cout << "\n\nEnter Massage: \n"; cin >> massage;
+			cin.ignore();
+			cout << "\n\nEnter Massage: \n"; gets_s(massage, 1000);
 			image.Coder(massage, way);
 		};
 		break;

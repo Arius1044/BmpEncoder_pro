@@ -1,7 +1,7 @@
 #pragma once
 
 
-struct BMPINFO 
+struct BMPINFO
 {
 	unsigned int     Size;
 	unsigned int     Width;
