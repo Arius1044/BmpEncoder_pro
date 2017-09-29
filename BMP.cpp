@@ -77,28 +77,32 @@ BMP::BMP(char* way)
 
 }
 
-void BMP::get_info() const
+void BMP::get_light_info() const
 {
 	cout << "______________________________________________________________________________" << endl;
 	cout << "                               |    INFO   |                                  " << endl;
 	cout << "_______________________________|___________|__________________________________" << endl;
 
-	cout << "Size: " << File_INFO.Size << endl;
-	cout << "Height: " << File_INFO.Height << endl;
-	cout << "Width: " << File_INFO.Width << endl;
+	cout << "Height: " << File_INFO.Height << "px" << endl;
+	cout << "Width: " << File_INFO.Width << "px" << endl;
 	cout << "Canals on pixel: " << File_INFO.Count_of_Canals << endl;
 	cout << "Bits on color: " << File_INFO.Bits_on_Color << endl;
 	cout << "Max size of text message: " << Max_size_Massage << endl;
 	cout << "Count of pixels: " << File_INFO.Height*File_INFO.Width << endl;
 
 	cout << "_______________________________|___________|__________________________________" << endl;
+}
 
-	cout << "PIXELS: \n\n";
+void BMP::get_info() const
+{
+
+	get_light_info();
+	cout << "\nPIXELS: \n\n";
 	for (int i = 0; i < File_INFO.Height; i++)
 	{
 		for (int j = 0; j < File_INFO.Width; j++)
 		{
-			cout << pixels[i][j].c_R << "  " << pixels[i][j].c_G << "  " << pixels[i][j].c_B << "  "<<pixels[i][j].bit_R<< endl;
+			cout << pixels[i][j].c_R << "  " << pixels[i][j].c_G << "  " << pixels[i][j].c_B << "  " << pixels[i][j].bit_R << endl;
 
 		}
 		cout << "___________________" << endl;

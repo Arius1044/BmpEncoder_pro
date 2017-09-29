@@ -22,6 +22,6 @@ public:
 	void PrintMassage() const;
 	void DeCoder();
 	void Coder(char* _Massage_, char* way);
-
+	void get_light_info() const;
 
 };
