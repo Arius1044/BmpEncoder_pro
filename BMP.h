@@ -7,10 +7,8 @@ class BMP
 {
 private:
 
-
 	char* Massage;
 	unsigned int size_Massage;
-
 	unsigned int Max_size_Massage;
 	BMPINFO File_INFO;
 	RGB **pixels;
@@ -23,9 +21,7 @@ public:
 	void get_info() const;
 	void PrintMassage() const;
 	void DeCoder();
-
 	void Coder(char* _Massage_, char* way);
 
 
 };
-

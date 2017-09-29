@@ -26,7 +26,6 @@ int BMP::Tcode(int byte)
 
 BMP::BMP(char* way)
 {
-
 	ifstream file_image(way, ios_base::binary);
 
 	file_image.seekg(14);
@@ -40,21 +39,17 @@ BMP::BMP(char* way)
 
 	file_image.seekg(54);
 
-
 	Max_size_Massage = (File_INFO.Width*File_INFO.Height) / 8;
 	size_Massage = Max_size_Massage;
 
 	Massage = new char[size_Massage];
-
 
 	pixels = new RGB *[File_INFO.Height];
 	for (int i = 0; i < File_INFO.Height; i++)
 		pixels[i] = new RGB[File_INFO.Width];
 
 
-
 	File_INFO.Line_Padding = ((File_INFO.Width * (File_INFO.Bits_on_Color / 8)) % 4) & 3;
-
 
 	int code;
 
@@ -69,10 +64,13 @@ BMP::BMP(char* way)
 			pixels[i][j].c_G = Tcode(code);
 			file_image.read((char*)&code, 1);
 			pixels[i][j].c_R = Tcode(code);
+			pixels[i][j].bit_R = (pixels[i][j].c_R % 2 == 0 ? 0 : 1);
 
 		}
 		file_image.seekg(File_INFO.Line_Padding, ios::cur);
 	}
+
+
 
 	file_image.close();
 
@@ -88,22 +86,19 @@ void BMP::get_info() const
 	cout << "Size: " << File_INFO.Size << endl;
 	cout << "Height: " << File_INFO.Height << endl;
 	cout << "Width: " << File_INFO.Width << endl;
-
 	cout << "Canals on pixel: " << File_INFO.Count_of_Canals << endl;
 	cout << "Bits on color: " << File_INFO.Bits_on_Color << endl;
 	cout << "Max size of text message: " << Max_size_Massage << endl;
 	cout << "Count of pixels: " << File_INFO.Height*File_INFO.Width << endl;
 
-
 	cout << "_______________________________|___________|__________________________________" << endl;
 
 	cout << "PIXELS: \n\n";
 	for (int i = 0; i < File_INFO.Height; i++)
-
 	{
 		for (int j = 0; j < File_INFO.Width; j++)
 		{
-			cout << pixels[i][j].c_R << "  " << pixels[i][j].c_G << "  " << pixels[i][j].c_B << "  " << endl;
+			cout << pixels[i][j].c_R << "  " << pixels[i][j].c_G << "  " << pixels[i][j].c_B << "  "<<pixels[i][j].bit_R<< endl;
 
 		}
 		cout << "___________________" << endl;
@@ -113,48 +108,45 @@ void BMP::get_info() const
 void BMP::DeCoder()
 {
 
-	bool *Code_bits = new bool[8];
-	bool Canal_bit;
-	short counter = 0;
-	int number = 0;
-	int ind = 0;
+	bool *Code_bits = new bool[(File_INFO.Size*8)];
 
-	for (int i = 0; i < File_INFO.Height; i++)
+	unsigned int i, j, count = 1;
+	int number = 0;
+	unsigned int ind = 0, jnd = 0;
+
+	for (i = 0; i < File_INFO.Height; i++)
 	{
-		for (int j = 0; j < File_INFO.Width; j++)
+		for (j = 0; j < File_INFO.Width; j++, count++)
+
 		{
 
-			for (int k = 7; k >= 0; k--)
-				Canal_bit = (pixels[i][j].c_R >> k) & 1;
-
-			Code_bits[counter] = Canal_bit;
-			pixels[i][j].bit_R = Canal_bit;
-
-			if (counter == 7)
+			number += pixels[i][j].bit_R * pow(2, 7 - ind++);
+			if (count==8)
 			{
-				for (int k = 0; k < 8; ++k)
-					number += Code_bits[k] * pow(2, 7 - k);
-				cout << number<<"  ";
+				Massage[jnd] = char(number);				
+
+				if (Massage[jnd] == '~')
+				{
+					size_Massage = jnd;
+					delete[] Code_bits;
+					return;
+				}
 				number = 0;
-				counter = 0;
+				ind = 0;
+				jnd++;
+				count = 0;
+
 			}
 
-			if (Massage[ind] == '~')
-			{
-				size_Massage = ind;
-				delete[] Code_bits;
-				return;
-			}
-			counter++;
-			ind++;
+			
 		}
 
 	}
 
+	size_Massage = jnd;
 	delete[] Code_bits;
 
 }
-
 
 void BMP::PrintMassage() const
 {
@@ -166,26 +158,26 @@ void BMP::Coder(char* _Massage_, char* way)
 {
 	strcpy(Massage, _Massage_);
 	size_Massage = strlen(Massage);
-	int ind = 0;
+	unsigned int ind = 0, i, j;
 
 	bool *code_bits = new bool[size_Massage * 8];
 
-	for (int i = 0; i < size_Massage; i++)
+	for (i = 0; i < size_Massage; i++)
 	{
 		int buff = int(Massage[i]);
-		for (int k = 7; k >= 0; k--)
+		for (int k = 7; k >= 0; k--, ind++)
 		{
-			code_bits[ind++] = (buff >> k) & 1;
+			
+			code_bits[ind] = (buff >> k) & 1;
 		}
-
 	}
 
 
 	ind = 0;
 
-	for (int i = 0; i < File_INFO.Height; i++)
+	for (i = 0; i < (File_INFO.Height) && (ind<size_Massage*8); i++)
 	{
-		for (int j = 0; j < File_INFO.Width; j++)
+		for (j = 0; (j < File_INFO.Width) && (ind<size_Massage*8) ; j++)
 		{
 			if (pixels[i][j].bit_R != code_bits[ind])
 			{
@@ -203,9 +195,9 @@ void BMP::Coder(char* _Massage_, char* way)
 	file_image.seekp(54);
 
 
-	for (int i = 0; i < File_INFO.Height; i++)
+	for (i = 0; i < (File_INFO.Height) && (ind<size_Massage*8); i++)
 	{
-		for (int j = 0; j < File_INFO.Width; j++)
+		for (j = 0; j < (j < File_INFO.Width) && (ind<size_Massage*8); j++)
 		{
 			file_image.write((char*)&pixels[i][j].c_B, 1);
 			file_image.write((char*)&pixels[i][j].c_G, 1);
@@ -219,7 +211,6 @@ void BMP::Coder(char* _Massage_, char* way)
 
 
 }
-
 
 
 BMP::~BMP()
